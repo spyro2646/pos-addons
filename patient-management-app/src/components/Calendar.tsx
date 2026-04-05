@@ -60,7 +60,9 @@ const APPOINTMENTS: Appointment[] = [
 ];
 
 export function CalendarView() {
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(
+    null
+  );
 
   const getStatusColor = (status: AppointmentStatus) => {
     switch (status) {
@@ -101,10 +103,19 @@ export function CalendarView() {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold text-gray-800">Today's Appointments</h2>
           <div className="flex space-x-4 text-sm text-gray-600">
-            <div className="flex items-center"><span className="w-3 h-3 rounded-full bg-blue-400 mr-2"></span> Confirmed</div>
-            <div className="flex items-center"><span className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></span> Waiting</div>
-            <div className="flex items-center"><span className="w-3 h-3 rounded-full bg-green-400 mr-2"></span> In Progress</div>
-            <div className="flex items-center"><span className="w-3 h-3 rounded-full bg-gray-400 mr-2"></span> Completed</div>
+            <div className="flex items-center">
+              <span className="w-3 h-3 rounded-full bg-blue-400 mr-2"></span> Confirmed
+            </div>
+            <div className="flex items-center">
+              <span className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></span> Waiting
+            </div>
+            <div className="flex items-center">
+              <span className="w-3 h-3 rounded-full bg-green-400 mr-2"></span> In
+              Progress
+            </div>
+            <div className="flex items-center">
+              <span className="w-3 h-3 rounded-full bg-gray-400 mr-2"></span> Completed
+            </div>
           </div>
         </div>
 
@@ -119,9 +130,13 @@ export function CalendarView() {
                 } ${getStatusColor(apt.status).replace("bg-", "hover:bg-opacity-50 ")}`}
                 style={{
                   borderLeftColor:
-                    apt.status === "confirmed" ? "#60a5fa" :
-                    apt.status === "waiting" ? "#facc15" :
-                    apt.status === "in-progress" ? "#4ade80" : "#9ca3af"
+                    apt.status === "confirmed"
+                      ? "#60a5fa"
+                      : apt.status === "waiting"
+                      ? "#facc15"
+                      : apt.status === "in-progress"
+                      ? "#4ade80"
+                      : "#9ca3af",
                 }}
               >
                 <div className="w-24 font-medium text-gray-600 shrink-0">
@@ -164,16 +179,23 @@ export function CalendarView() {
 
           <div className="p-6 flex-1 overflow-y-auto">
             <div className="mb-6">
-              <h4 className="text-2xl font-bold text-trust-blue">{selectedAppointment.patientName}</h4>
+              <h4 className="text-2xl font-bold text-trust-blue">
+                {selectedAppointment.patientName}
+              </h4>
               <p className="text-sm text-gray-500 flex items-center mt-1">
-                <Clock className="w-4 h-4 mr-1" /> {selectedAppointment.time} ({selectedAppointment.duration} mins)
+                <Clock className="w-4 h-4 mr-1" /> {selectedAppointment.time} (
+                {selectedAppointment.duration} mins)
               </p>
             </div>
 
             <div className="mb-6">
-              <h5 className="text-xs uppercase font-bold text-gray-400 tracking-wider mb-2">Today's Visit</h5>
+              <h5 className="text-xs uppercase font-bold text-gray-400 tracking-wider mb-2">
+                Today's Visit
+              </h5>
               <div className="bg-gray-50 p-3 rounded-md border border-gray-100">
-                <p className="font-medium text-gray-800">{selectedAppointment.reason}</p>
+                <p className="font-medium text-gray-800">
+                  {selectedAppointment.reason}
+                </p>
                 <div className="mt-2 inline-block px-2 py-1 rounded text-xs font-medium bg-white border border-gray-200">
                   Type: {selectedAppointment.type}
                 </div>
@@ -181,7 +203,9 @@ export function CalendarView() {
             </div>
 
             <div>
-              <h5 className="text-xs uppercase font-bold text-gray-400 tracking-wider mb-2">Last Visit Note</h5>
+              <h5 className="text-xs uppercase font-bold text-gray-400 tracking-wider mb-2">
+                Last Visit Note
+              </h5>
               <div className="bg-blue-50/50 p-3 rounded-md border border-blue-100/50 text-gray-700 text-sm leading-relaxed">
                 {selectedAppointment.lastVisitNote}
               </div>

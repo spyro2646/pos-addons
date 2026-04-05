@@ -23,9 +23,7 @@ export function Sidebar() {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="p-4 mb-4 flex items-center justify-center h-16 border-b border-white/20">
-        <span className="font-bold text-xl">
-          {isHovered ? "Practo Vibe" : "PV"}
-        </span>
+        <span className="font-bold text-xl">{isHovered ? "Practo Vibe" : "PV"}</span>
       </div>
       <nav className="flex-1">
         <ul className="space-y-2 px-2">

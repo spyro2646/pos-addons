@@ -11,7 +11,9 @@ export function PatientEMR() {
       <div className="w-[300px] shrink-0 p-4 flex flex-col h-full overflow-y-auto">
         <div className="sticky top-0 bg-white pb-4 z-10">
           <h2 className="text-2xl font-bold text-gray-800">John Doe</h2>
-          <p className="text-sm text-gray-500 font-medium">32 Y/O • Male • ID: PT-8492</p>
+          <p className="text-sm text-gray-500 font-medium">
+            32 Y/O • Male • ID: PT-8492
+          </p>
 
           <div className="mt-4 border-2 border-red-500 bg-red-50 rounded-md p-3">
             <div className="flex items-center text-red-700 font-bold mb-1">
@@ -87,15 +89,25 @@ export function PatientEMR() {
             <div className="bg-white p-4 rounded-lg shadow-sm border border-light-gray">
               <div className="flex justify-between items-start mb-2">
                 <span className="font-bold text-gray-800">Today, 10:30 AM</span>
-                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Consultation</span>
+                <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  Consultation
+                </span>
               </div>
               <div className="mb-3">
-                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">Chief Complaint</span>
-                <p className="text-sm font-medium text-gray-800">Persistent cough and mild fever for 3 days.</p>
+                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">
+                  Chief Complaint
+                </span>
+                <p className="text-sm font-medium text-gray-800">
+                  Persistent cough and mild fever for 3 days.
+                </p>
               </div>
               <div>
-                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">Diagnosis</span>
-                <p className="text-sm text-gray-700">Viral Upper Respiratory Tract Infection.</p>
+                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">
+                  Diagnosis
+                </span>
+                <p className="text-sm text-gray-700">
+                  Viral Upper Respiratory Tract Infection.
+                </p>
               </div>
             </div>
           </div>
@@ -106,15 +118,23 @@ export function PatientEMR() {
             <div className="bg-white p-4 rounded-lg shadow-sm border border-light-gray opacity-80 hover:opacity-100 transition-opacity">
               <div className="flex justify-between items-start mb-2">
                 <span className="font-bold text-gray-700">Oct 12, 2023</span>
-                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Follow-up</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                  Follow-up
+                </span>
               </div>
               <div className="mb-3">
-                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">Chief Complaint</span>
+                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">
+                  Chief Complaint
+                </span>
                 <p className="text-sm font-medium text-gray-800">Review BP logs.</p>
               </div>
               <div>
-                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">Notes</span>
-                <p className="text-sm text-gray-700">BP stabilized at 120/80. Continue current medication.</p>
+                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">
+                  Notes
+                </span>
+                <p className="text-sm text-gray-700">
+                  BP stabilized at 120/80. Continue current medication.
+                </p>
               </div>
             </div>
           </div>
@@ -125,19 +145,26 @@ export function PatientEMR() {
             <div className="bg-white p-4 rounded-lg shadow-sm border border-light-gray opacity-80 hover:opacity-100 transition-opacity">
               <div className="flex justify-between items-start mb-2">
                 <span className="font-bold text-gray-700">Sep 05, 2023</span>
-                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Consultation</span>
+                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                  Consultation
+                </span>
               </div>
               <div className="mb-3">
-                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">Chief Complaint</span>
+                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">
+                  Chief Complaint
+                </span>
                 <p className="text-sm font-medium text-gray-800">Routine physical.</p>
               </div>
               <div>
-                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">Notes</span>
-                <p className="text-sm text-gray-700">All vitals normal. Blood work requested.</p>
+                <span className="text-xs text-gray-500 uppercase font-bold tracking-wider">
+                  Notes
+                </span>
+                <p className="text-sm text-gray-700">
+                  All vitals normal. Blood work requested.
+                </p>
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -146,7 +173,9 @@ export function PatientEMR() {
         <h2 className="text-lg font-bold mb-4 text-gray-800">New Prescription</h2>
 
         <div className="mb-4">
-          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">Quick Templates</label>
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+            Quick Templates
+          </label>
           <div className="grid grid-cols-2 gap-2">
             <button className="text-xs font-medium bg-white border border-light-gray p-2 rounded hover:bg-trust-blue/10 hover:border-trust-blue hover:text-trust-blue transition-colors text-left">
               Standard Fever Pack
@@ -173,7 +202,9 @@ export function PatientEMR() {
 
         <div className="mt-auto">
           <div className="border border-dashed border-gray-300 rounded-md p-4 mb-4 bg-white text-center cursor-pointer hover:bg-gray-50 transition-colors">
-            <span className="font-script text-xl text-gray-400 block mb-1">Dr. Smith Signature</span>
+            <span className="font-script text-xl text-gray-400 block mb-1">
+              Dr. Smith Signature
+            </span>
             <span className="text-xs text-gray-400">Click to sign</span>
           </div>
 

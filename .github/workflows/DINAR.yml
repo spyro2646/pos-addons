@@ -23,7 +23,6 @@ on:
   schedule:
     - cron: "5 5 * * 0"
 
-
 jobs:
   check-secret:
     runs-on: ubuntu-latest

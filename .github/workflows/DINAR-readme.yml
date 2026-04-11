@@ -20,6 +20,7 @@ on:
       - ".DINAR/config.yaml"
       - ".github/workflows/DINAR-readme.yml"
       - "*/__manifest__.py"
+
 jobs:
   repo_readme:
     runs-on: ubuntu-latest

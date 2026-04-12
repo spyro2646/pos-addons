@@ -13,6 +13,9 @@
 # limitations under the License.
 name: "DINAR"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   pull_request:
 
@@ -67,7 +70,7 @@ jobs:
           python ../DINAR/workflow-files/analyze-modules.py updated ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.number }}
       - name: Configure docker
         run: |
-          bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER="itpp-labs" bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
           echo "PR_FILES=../../REPO" >> $GITHUB_ENV
       - name: HOW TO RUN ODOO LOCALLY
         if: always()
@@ -115,7 +118,7 @@ jobs:
           ref: master
       - name: Configure docker
         run: |
-          bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER="itpp-labs" bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
           echo "PR_FILES=../../REPO" >> $GITHUB_ENV
       - name: Install python tools
         run: |
@@ -130,7 +133,7 @@ jobs:
           # Get list of installed modules
           ODOO_BASE_MODULES=$(docker inspect \
           --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar_odoo_1)
+          dinar-odoo-1)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
@@ -221,7 +224,7 @@ jobs:
           fi
       - name: Configure Docker
         run: |
-          bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER="itpp-labs" bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
           echo "PR_FILES=../../REPO" >> $GITHUB_ENV
       - name: Analyze PR
         run: |

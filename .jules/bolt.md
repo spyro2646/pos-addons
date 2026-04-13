@@ -1,0 +1,3 @@
+## 2024-04-13 - Avoid redundant apt-get installs in CI
+**Learning:** Standard tools like `jq` are pre-installed on GitHub Actions runner images (e.g., `ubuntu-latest`). Installing them manually with `sudo apt-get install` wastes valuable CI execution time.
+**Action:** Before running an `apt-get install` step in a CI workflow, check if the package is already included in the standard runner image environments to avoid redundant installation and speed up the CI pipeline.

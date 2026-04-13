@@ -13,3 +13,11 @@ actions based on older Node.js versions (e.g., Node 12 or Node 16). **Action:** 
 maintain and use the latest versions of standard GitHub actions (`checkout@v4`,
 `cache@v4`, `setup-python@v5`, `upload-artifact@v4`) to avoid abrupt CI failures and
 maintain fast workflow provisioning.
+
+## 2024-04-13 - docker-compose v1 not available on ubuntu-24.04
+
+**Learning:** The legacy `docker-compose` v1 command has been completely removed from
+modern runner environments like `ubuntu-24.04`, resulting in a "command not found" error
+with exit code 127. **Action:** Always use the modern `docker compose` (v2) syntax. Be
+aware that v2 strictly enforces lowercase characters for project names (via the `-p`
+flag), so `docker-compose -p DINAR` must become `docker compose -p dinar`.

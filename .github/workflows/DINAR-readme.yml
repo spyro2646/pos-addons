@@ -20,8 +20,6 @@ on:
       - ".DINAR/config.yaml"
       - ".github/workflows/DINAR-readme.yml"
       - "*/__manifest__.py"
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   repo_readme:

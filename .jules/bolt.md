@@ -1,4 +1,4 @@
-## \$(date +%Y-%m-%d) - CI Environment Discovery
+## \2026-04-16 - CI Environment Discovery
 
 **Learning:** GitHub Actions `ubuntu-latest` runners have many common utilities (like
 `jq`) pre-installed. Attempting to `apt-get install` these tools manually is not only

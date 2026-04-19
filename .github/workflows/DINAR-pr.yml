@@ -127,7 +127,7 @@ jobs:
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull never
       - name: Analyze PR
         run: |
           # Get list of installed modules
@@ -247,7 +247,7 @@ jobs:
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull never
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |

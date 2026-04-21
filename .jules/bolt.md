@@ -16,3 +16,14 @@ artifact actions. **Action:** Always verify that workflows are using modern, sup
 versions of GitHub Actions (e.g., `actions/checkout@v4`, `actions/cache@v4`,
 `actions/upload-artifact@v4`, `actions/setup-python@v5`) to prevent hard CI failures and
 ensure workflow reliability.
+
+## 2024-05-15 - Fix Docker Compose v2 syntax and Node.js deprecations
+
+**Learning:** Modern GitHub Action runners (like `ubuntu-latest`/`ubuntu-24.04`) do not
+support legacy `docker-compose` and Node.js 20 actions are being deprecated.
+Furthermore, `docker compose` v2 enforces strict project name validation (must be
+lowercase) and handles missing image pulls differently during `up`. **Action:** Always
+use `docker compose` (v2 syntax) with lowercase project names (e.g., `-p dinar`), handle
+intentional pull failures with `--ignore-pull-failures || true` combined with
+`--pull never` on subsequent `up` commands, and explicitly opt-in to Node.js 24 using
+`FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` in workflow env blocks.

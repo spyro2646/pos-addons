@@ -27,3 +27,14 @@ use `docker compose` (v2 syntax) with lowercase project names (e.g., `-p dinar`)
 intentional pull failures with `--ignore-pull-failures || true` combined with
 `--pull never` on subsequent `up` commands, and explicitly opt-in to Node.js 24 using
 `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` in workflow env blocks.
+
+## 2024-05-15 - Handle missing image pulls consistently in Docker Compose V2
+
+**Learning:** In Docker Compose V2, if you configure a `pull` command to intentionally
+ignore missing images (`--ignore-pull-failures || true`), _all_ subsequent `up` commands
+must include `--pull never`. Otherwise, `up` defaults to pulling and will crash with
+"manifest unknown" or "No such image" when it attempts to start containers for those
+missing images. **Action:** When working with CI workflows that tolerate missing
+pre-built images, ensure that `--pull never` is appended to all `docker compose up`
+commands, including those used to start the test suite (e.g.,
+`docker compose up --abort-on-container-exit --pull never`).

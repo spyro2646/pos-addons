@@ -13,6 +13,9 @@
 # limitations under the License.
 name: "Port module"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   issues:
     types:

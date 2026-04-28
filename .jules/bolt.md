@@ -22,3 +22,13 @@ not found" errors in workflows. **Action:** Always migrate legacy `docker-compos
 commands to the `docker compose` (v2) syntax. When doing so, remember that Docker
 Compose v2 enforces strict validation for project names (`-p`), requiring them to be
 lowercase alphanumeric (e.g., `dinar` instead of `DINAR`).
+
+## 2024-04-28 - Docker Compose pull failures in CI
+
+**Learning:** In CI, `docker compose pull` can fail with `manifest unknown` if an
+expected image is not yet available, which will crash the pipeline. Subsequent `up`
+commands will re-attempt the pull and also fail if not properly configured. **Action:**
+When pulling pre-built images, always add `--ignore-pull-failures || true` to
+`docker compose pull` to allow the CI to continue. Furthermore, to prevent subsequent
+`up` commands from failing, pass the `--pull never` flag to all `docker compose up`
+commands.

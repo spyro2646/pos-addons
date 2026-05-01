@@ -22,6 +22,8 @@ on:
   # Cron works only for defaul branch. See https://github.com/itpp-labs/DINAR/issues/48
   schedule:
     - cron: "5 5 * * 0"
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   check-secret:
@@ -57,16 +59,16 @@ jobs:
       - check-branch
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.7.x"
       - name: Prepare build folder

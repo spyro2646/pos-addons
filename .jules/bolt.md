@@ -1,3 +1,8 @@
-## 2024-05-18 - Avoid redundant apt-get installations for pre-installed runner tools
-**Learning:** Standard tools like `jq` are already pre-installed on standard GitHub Actions `ubuntu-latest` runners. Running `sudo apt-get install jq` during workflow execution introduces unnecessary overhead and network requests.
-**Action:** Before writing steps to install common system tools via package managers, verify if the tool is already pre-installed in the GitHub Actions runner environment.
+## 2024-05-18 - CI Failures from Deprecated Node and Docker Compose v1
+
+**Learning:** Modern GitHub Actions runners (`ubuntu-24.04`) do not support
+`docker-compose` (v1) and will throw an exit 127 "command not found" error.
+Additionally, GitHub Actions that rely on Node 20 are being deprecated, causing warnings
+and failures. **Action:** Always use the v2 syntax `docker compose` with lowercase
+project names (e.g., `-p dinar`). To resolve Node 20 deprecation issues, define a global
+`env:` block with `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true`.

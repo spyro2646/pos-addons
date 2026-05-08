@@ -20,3 +20,11 @@ container names (dinar-odoo-1). Separately, Node.js 20 actions are deprecated.
 names, update container reference names, and globally opt-in to Node 24 using the
 FORCE_JAVASCRIPT_ACTIONS_TO_NODE24 environment variable to fix CI pipeline hard
 failures.
+
+## 2024-05-08 - Docker Compose v2 Pull Behavior
+
+**Learning:** Docker Compose v2 defaults to pulling missing images on up commands,
+throwing 'manifest unknown' if they don't exist. **Action:** Use 'docker compose pull
+--ignore-pull-failures || true' and explicitly add '--pull never' to all subsequent 'up'
+commands (like '--no-start' and '--abort-on-container-exit') to prevent hard failures
+for missing base images that are built later.

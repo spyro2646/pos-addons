@@ -3,6 +3,8 @@ name: "Push Updates to REPO-store"
 on:
   push:
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 jobs:
   repo2store:
     runs-on: ubuntu-latest
@@ -11,7 +13,7 @@ jobs:
       'itpp-labs/')"
     steps:
       - name: Checkout REPO
-        uses: actions/checkout@v2-beta
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           # custom token is not needed for fetching REPO,

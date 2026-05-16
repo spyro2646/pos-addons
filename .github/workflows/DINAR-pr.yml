@@ -136,9 +136,6 @@ jobs:
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
           cd REPO
           python ../DINAR/workflow-files/analyze-modules.py updated ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.number }} $ODOO_BASE_MODULES
-      - name: Install json parser
-        run: |
-          sudo apt-get install jq
       - name: Install Additional Dependencies (Modules)
         if: env.PR_MODULES_DEPS != ''
         run: |
@@ -232,9 +229,6 @@ jobs:
           DEPS_MODULES=$(cat new-deps/modules.txt || true)
           cd REPO
           python ../DINAR/workflow-files/analyze-modules.py all "$DEPS_MODULES"
-      - name: Install json parser
-        run: |
-          sudo apt-get install jq
       - name: HOW TO RUN TESTS LOCALLY
         if: always()
         run: |

@@ -19,6 +19,9 @@ on:
       - opened
       - reopened
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   port:
     runs-on: ubuntu-latest

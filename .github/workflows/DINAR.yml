@@ -23,6 +23,9 @@ on:
   schedule:
     - cron: "5 5 * * 0"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   check-secret:
     runs-on: ubuntu-latest

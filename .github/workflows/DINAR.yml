@@ -13,9 +13,6 @@
 # limitations under the License.
 name: "DINAR: Docker Image Building"
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 on:
   push:
     paths:
@@ -60,16 +57,16 @@ jobs:
       - check-branch
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v1
         with:
           python-version: "3.7.x"
       - name: Prepare build folder

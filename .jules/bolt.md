@@ -14,3 +14,17 @@ exist.
 **Learning:** Standard tools like `jq` are pre-installed on modern GitHub Actions
 `ubuntu-latest` runners. Manually installing them wastes CI time. **Action:** Remove
 manual `apt-get install jq` steps to optimize CI execution time.
+
+## 2024-05-27 - [Migrating to Docker Compose v2]
+
+**Learning:** Modern GitHub Actions Ubuntu runners (such as `ubuntu-latest` /
+`ubuntu-24.04`) do not come pre-installed with the legacy `docker-compose` v1 command,
+leading to `command not found` (exit code 127) errors. Also, Docker Compose v2 enforces
+strict project naming (lowercase letters, hyphens, and underscores) via the `-p` flag,
+and the default container naming scheme changes from underscores (`_1`) to hyphens
+(`-1`). **Action:** When migrating workflows or encountering
+`docker-compose: command not found`, replace `docker-compose` with `docker compose`.
+Ensure project names passed via `-p` are lowercase (e.g., `-p dinar` instead of
+`-p DINAR`), and update downstream container references in scripts (e.g.,
+`docker inspect dinar-odoo-1` instead of `dinar_odoo_1`) to match the new naming
+conventions. Be careful to exclude `-f` filenames from `sed` replacements.

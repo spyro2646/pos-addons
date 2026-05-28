@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 name: "Port module"
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 on:
   issues:
@@ -58,7 +60,9 @@ jobs:
           path: REPO
           fetch-depth: 0
           ref: ${{ env.PORT_TO_BRANCH }}
-      - uses: actions/cache@v1
+      - name: cache
+        # ⚡ Bolt: upgraded to v4 for modernized backend and zstd compression performance improvements
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}

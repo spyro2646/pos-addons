@@ -125,7 +125,7 @@ jobs:
       - name: Download Docker images with preinstalled modules
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
       - name: Analyze PR
         run: |
@@ -253,7 +253,7 @@ jobs:
       - name: Download base images
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'

@@ -18,3 +18,10 @@ Upgraded actions versions and ensured syntax is valid.
 docker compose. Also need to use FORCE_JAVASCRIPT_ACTIONS_TO_NODE24. Project name flag
 -p must be lowercased for docker compose. **Action:** Fixed DINAR-pr.yml script and
 suppressed deprecation warnings.
+
+## YYYY-MM-DD - [Fixing CI again]
+
+**Learning:** `docker compose pull` can fail when an image isn't built yet ("manifest
+unknown"). By default `docker compose up` will build it, but it needs to be told to
+ignore pull failures so the pipeline continues. **Action:** Added
+`--ignore-pull-failures || true` to docker compose pull steps in PR checks.

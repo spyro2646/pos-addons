@@ -21,3 +21,17 @@ upgrade all legacy core actions (`actions/checkout`, `actions/cache`,
 Additionally, actively scan for and update all legacy `docker-compose` commands to
 `docker compose` (with `-p dinar` instead of uppercase `-p DINAR`), to ensure the
 pipeline natively supports the modern v2 plugin syntax.
+
+## 2024-05-31 - Global Node.js 20 Deprecation Warnings in GitHub Actions
+
+**Learning:** Node.js 20 will soon be globally removed from github action runners. A
+`Node.js 20 actions are deprecated` warning will appear if any legacy actions are
+executed (even if upgraded to v4, some older v4 versions might still rely on it or the
+runner itself complains). To globally silence this deprecation and opt into Node 24
+early across the entire file, `env:` block with
+`FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` must be specified at the top level of the
+workflow file. **Action:** When updating github actions for deprecation issues, always
+set `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true` at the root `env` level of the workflow.
+Be careful with `sed` replacements for this top-level insertion, as simplistic
+`sed 's/on:/env.../g'` can accidentally match nested `on:` values (like `runs-on:`);
+explicitly insert it right after the `name:` declaration.

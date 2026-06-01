@@ -19,3 +19,13 @@ lingering warnings, and replaced all instances of `docker-compose` with `docker 
 in `DINAR-pr.yml` and `DINAR-PORT.yml` while ensuring the project name flag is lowercase
 (`-p dinar`) to adhere to Compose v2 strict naming validation. Also appended `|| true`
 to `docker compose pull` commands to prevent hard failures on missing images.
+
+## 2024-06-01 - Fixing Docker Compose v2 Container Naming References
+
+**Learning:** Docker Compose v2 generates container names using hyphens instead of
+underscores by default (e.g., `<project-name>-<service-name>-<index>` such as
+`dinar-odoo-1` instead of `dinar_odoo_1`). When migrating to Docker Compose v2,
+references to container names in scripts (like `docker inspect`) must be updated to
+match this new convention. **Action:** Explored existing container references (e.g.,
+using `grep`) and updated `dinar_odoo_1` to `dinar-odoo-1` in `docker inspect` commands
+within `.github/workflows/DINAR-pr.yml` to prevent failures when accessing containers.

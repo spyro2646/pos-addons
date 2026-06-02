@@ -10,3 +10,16 @@ or missing, as v4 enforces strict failure by default. **Action:** When performin
 performance upgrades of CI workflow actions, actively investigate any change in default
 error-handling behavior (like missing artifacts triggering hard failures in v4) to
 prevent breaking CI workflows.
+
+## 2026-06-02 - Docker Compose v2 Migration in CI
+
+**Learning:** Modern GitHub Actions runners (ubuntu-latest) have deprecated the legacy
+`docker-compose` v1 binary in favor of the `docker compose` v2 plugin. Migrating
+requires updating project names to lowercase (`-p DINAR` to `-p dinar`), updating script
+container references to use hyphens instead of underscores (`dinar_odoo_1` to
+`dinar-odoo-1`), and handling stricter pull behavior by appending
+`--ignore-pull-failures` to prevent pipeline failures on missing manifest errors that
+were previously ignored. **Action:** When updating CI scripts running on modern
+infrastructure, proactively transition all container management commands to
+`docker compose` v2 syntax and perform a thorough validation of dependent script
+arguments (like `docker inspect` targets) to prevent silent failures.

@@ -58,7 +58,9 @@ jobs:
           path: REPO
           fetch-depth: 0
           ref: ${{ env.PORT_TO_BRANCH }}
-      - uses: actions/cache@v1
+      # Bolt Performance Optimization: Upgraded actions/cache to v4
+      # Why: v4 utilizes a faster backend and zstd compression, significantly speeding up CI execution.
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}

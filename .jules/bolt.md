@@ -23,3 +23,13 @@ were previously ignored. **Action:** When updating CI scripts running on modern
 infrastructure, proactively transition all container management commands to
 `docker compose` v2 syntax and perform a thorough validation of dependent script
 arguments (like `docker inspect` targets) to prevent silent failures.
+
+## 2026-06-02 - GitHub Actions Checkout shallow fetch failure
+
+**Learning:** `actions/checkout@v2` defaults to `fetch-depth: 1` (a shallow clone). When
+performing operations that require repository history or comparing against a base branch
+(like `git diff FETCH_HEAD..HEAD` during pre-commit checks), the shallow clone will fail
+to fetch the necessary commits, resulting in CI failures. **Action:** When configuring
+CI pipelines that require git history analysis or cross-branch diffing, explicitly
+configure `actions/checkout` with `fetch-depth: 0` to pull the complete history and
+ensure git comparison operations succeed.

@@ -34,7 +34,8 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      # ⚡ Bolt: Upgraded cache action to v4 to significantly speed up CI execution and prevent Node.js deprecation failures
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -83,7 +84,8 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      # ⚡ Bolt: Upgraded cache action to v4 to significantly speed up CI execution and prevent Node.js deprecation failures
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}
@@ -166,8 +168,10 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        # ⚡ Bolt: Upgraded upload-artifact action to v4 for modernized backend and zstd compression speedup
+        uses: actions/upload-artifact@v4
         with:
+          if-no-files-found: ignore
           name: new-deps
           path: new-deps/
       - name: HOW TO RUN QUICK TESTS LOCALLY
@@ -213,7 +217,9 @@ jobs:
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        # ⚡ Bolt: Upgraded download-artifact action to v4 for modernized backend and zstd compression speedup
+        uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: new-deps
           path: new-deps/

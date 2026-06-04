@@ -58,7 +58,8 @@ jobs:
           path: REPO
           fetch-depth: 0
           ref: ${{ env.PORT_TO_BRANCH }}
-      - uses: actions/cache@v1
+      # ⚡ Bolt: Upgraded cache action to v4 to significantly speed up CI execution and prevent Node.js deprecation failures
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}

@@ -11,12 +11,16 @@ deprecated by GitHub and will cause failures. When migrating to Docker Compose v
 exact image digest manifest doesn't exist remotely. While `--ignore-pull-failures` is
 the preferred flag, it does not prevent the fatal error for completely missing
 manifests. Regardless, do not append `|| true` or use `continue-on-error` to mask these
-failures. **Action:** When migrating `upload-artifact` to v4 in workflows where
-artifacts are conditionally populated, set `if-no-files-found: ignore` to prevent
-pipeline failures. When migrating `download-artifact` to v4 for conditionally uploaded
-artifacts, set `continue-on-error: true` on the step. Use Prettier to format markdown
-files. Avoid appending `|| true` to `docker compose up` or `docker inspect` commands to
-mask errors related to missing images or containers. Masking these errors is an
-anti-pattern; CI workflows are designed to handle missing images appropriately (e.g., by
-building missing layers) and should be allowed to fail or proceed naturally based on the
-actual state.
+failures. Furthermore, GitHub Actions running on Node.js 20 will cause CI failures or
+warnings; older actions like `actions/checkout@v2` and `actions/setup-python@v1` must be
+upgraded to their modern counterparts (`v4` and `v5` respectively) to ensure pipeline
+execution and performance. **Action:** When migrating `upload-artifact` to v4 in
+workflows where artifacts are conditionally populated, set `if-no-files-found: ignore`
+to prevent pipeline failures. When migrating `download-artifact` to v4 for conditionally
+uploaded artifacts, set `continue-on-error: true` on the step. Use Prettier to format
+markdown files. Avoid appending `|| true` to `docker compose up` or `docker inspect`
+commands to mask errors related to missing images or containers. Masking these errors is
+an anti-pattern; CI workflows are designed to handle missing images appropriately (e.g.,
+by building missing layers) and should be allowed to fail or proceed naturally based on
+the actual state. Upgrade general setup actions like `actions/checkout` and
+`actions/setup-python` to at least v4 to resolve Node.js deprecations.

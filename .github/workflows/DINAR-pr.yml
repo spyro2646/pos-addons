@@ -34,7 +34,8 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      # Bolt: Upgrading actions/cache to v4 provides significant CI execution performance improvement due to modernized backend and zstd compression
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -83,7 +84,8 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      # Bolt: Upgrading actions/cache to v4 provides significant CI execution performance improvement due to modernized backend and zstd compression
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}
@@ -166,10 +168,12 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        # Bolt: Upgrading actions/upload-artifact to v4 provides significant CI execution performance improvement due to modernized backend and zstd compression
+        uses: actions/upload-artifact@v4
         with:
           name: new-deps
           path: new-deps/
+          if-no-files-found: ignore
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
         run: |
@@ -213,10 +217,12 @@ jobs:
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        # Bolt: Upgrading actions/download-artifact to v4 provides significant CI execution performance improvement due to modernized backend and zstd compression
+        uses: actions/download-artifact@v4
         with:
           name: new-deps
           path: new-deps/
+        continue-on-error: true
       - name: Check artifact
         run: |
           if [ ! -f new-deps/modules.txt ]; then

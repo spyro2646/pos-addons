@@ -1,11 +1,13 @@
-## 2024-06-11 - Dynamic scripting issue
+## 2024-06-11 - Docker Compose Pull Failure
 
-**Learning:** `how-to-run-locally.sh` dynamically downloads the latest
-`docker-compose.yml` but it fails on `docker compose pull` if the remote container is
-missing. Wait! `how-to-run-locally.sh` is part of `itpp-labs/DINAR-fork` but the CI
-checks out `itpp-labs/DINAR-fork@master` so we CAN patch it locally before executing!
-**Action:** Append a `sed` command to patch `how-to-run-locally.sh` right after
-checkout. Replace `docker compose pull` with
-`docker compose pull --ignore-pull-failures || true` and `docker compose up --no-start`
-with `docker compose up --no-start --pull missing`. Or, just patch `docker compose pull`
-out entirely!
+**Learning:** `docker compose pull --ignore-pull-failures || true` works to bypass the
+non-zero exit code of the pull step. However, the subsequent command
+`docker compose up --no-start --pull missing` will STILL attempt to pull missing images,
+and if the remote manifest genuinely does not exist, it will STILL fail with
+`manifest unknown` and exit non-zero. **Action:** We must also append `|| true` to the
+`docker compose up --no-start --pull missing` command inside the dynamic
+`how-to-run-locally.sh` script, or remove `--pull missing` and let it build. Actually,
+`docker compose up --no-start` doesn't build unless `--build` is passed. Given the
+previous fix, let's append `|| true` to the `up` command inside `how-to-run-locally.sh`
+as well, or just `sed` out the pull completely if that's what's failing. No, if it's
+`up`, we just need to append `|| true` to it in the patch.

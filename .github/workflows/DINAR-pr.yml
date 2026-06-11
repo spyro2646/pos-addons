@@ -57,7 +57,7 @@ jobs:
       - name: Patch DINAR scripts
         run: |
           sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' DINAR/workflow-files/how-to-run-locally.sh
-          sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing/g' DINAR/workflow-files/how-to-run-locally.sh
+          sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' DINAR/workflow-files/how-to-run-locally.sh
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -120,7 +120,7 @@ jobs:
       - name: Patch DINAR scripts
         run: |
           sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' DINAR/workflow-files/how-to-run-locally.sh
-          sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing/g' DINAR/workflow-files/how-to-run-locally.sh
+          sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' DINAR/workflow-files/how-to-run-locally.sh
       - name: Configure docker
         run: |
           bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
@@ -220,7 +220,7 @@ jobs:
       - name: Patch DINAR scripts
         run: |
           sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' DINAR/workflow-files/how-to-run-locally.sh
-          sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing/g' DINAR/workflow-files/how-to-run-locally.sh
+          sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' DINAR/workflow-files/how-to-run-locally.sh
       - name: Install python tools
         run: |
           pip install plumbum pyyaml

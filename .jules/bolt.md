@@ -18,3 +18,16 @@ GitHub Actions like `actions/checkout@v2` running on Node 20 are being deprecate
 should be upgraded to v4 to prevent failures. **Action:** Always use `docker compose`
 instead of `docker-compose`, ensure project names (`-p`) are lowercase, and proactively
 upgrade deprecated `actions/checkout` and `actions/setup-python` versions.
+
+## 2024-06-13 - [Performance/CI] Fixed Docker Compose V2 migration regressions
+
+**Learning:** When migrating to Docker Compose v2, `docker compose up` attempts to pull
+by default and will fail with `manifest unknown` if the remote manifest is missing.
+While `--pull missing` skips pulling existing images, it still exits non-zero if the
+image is entirely absent remotely. To safely tolerate missing remote images without
+breaking CI scripts, explicitly append `|| true` to the `docker compose up` command.
+Additionally, Docker Compose V2 changes the default container naming convention, using
+hyphens instead of underscores (e.g., `dinar-odoo-1` instead of `dinar_odoo_1`).
+**Action:** When migrating to v2, explicitly handle missing image scenarios (`|| true`)
+to avoid CI breakage, and ensure hardcoded container names are updated to match the
+hyphenated naming scheme.

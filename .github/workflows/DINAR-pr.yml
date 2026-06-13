@@ -213,13 +213,13 @@ jobs:
       - name: Install python tools
         run: |
           pip install plumbum pyyaml
-      - name: Download Additional Dependencies artifact
+      - name: Fetch new-deps artifact gracefully
         continue-on-error: true
         uses: actions/download-artifact@v4
         with:
           name: new-deps
           path: new-deps/
-      - name: Check artifact
+      - name: Check artifact locally
         run: |
           if [ ! -f new-deps/modules.txt ]; then
               echo "ARTIFACT=empty" >> $GITHUB_ENV
@@ -253,6 +253,17 @@ jobs:
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
+      - name: Fetch new-deps artifact gracefully
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: new-deps
+          path: new-deps/
+      - name: Check artifact locally
+        run: |
+          if [ ! -f new-deps/modules.txt ]; then
+              echo "ARTIFACT=empty" >> $GITHUB_ENV
+          fi
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |

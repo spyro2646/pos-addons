@@ -31,3 +31,25 @@ hyphens instead of underscores (e.g., `dinar-odoo-1` instead of `dinar_odoo_1`).
 **Action:** When migrating to v2, explicitly handle missing image scenarios (`|| true`)
 to avoid CI breakage, and ensure hardcoded container names are updated to match the
 hyphenated naming scheme.
+
+## 2024-06-13 - [Performance/CI] Optimizing Artifact Handling for Speed and Reliability
+
+**Learning:** The `actions/download-artifact@v4` action is strict and returns an error
+(Unable to download artifact(s): Artifact not found) if requested artifacts don't exist.
+Setting `continue-on-error: true` only suppresses the workflow failure but still causes
+the step itself to technically fail with exit code 1, polluting logs. For optimal
+workflow performance, conditionally gate the execution of the download action using `if`
+conditions when artifacts are known to be conditionally generated (e.g.
+`if: env.ARTIFACT == 'yes'`). **Action:** Always wrap `download-artifact@v4` and
+`upload-artifact@v4` steps in explicit `if` checks based on environment flags to prevent
+unnecessary execution and noisy step failures for dynamically populated artifacts.
+
+**Update:** To correctly handle conditionally generated artifacts between jobs using
+`upload-artifact@v4` and `download-artifact@v4`, using `if-no-files-found: ignore` is
+sufficient for the upload. For the download step in downstream jobs, since environment
+variables (`$GITHUB_ENV`) do not persist across jobs, attempting to gate the download
+action with `if: env.ARTIFACT == 'yes'` will incorrectly skip the step. Instead, allow
+the `download-artifact` step to run with `continue-on-error: true` and then
+conditionally evaluate the presence of the files dynamically in a bash step within that
+job to reconstruct the environment flag (e.g.
+`if [ ! -f new-deps/modules.txt ]; then echo "ARTIFACT=empty" >> $GITHUB_ENV; fi`).

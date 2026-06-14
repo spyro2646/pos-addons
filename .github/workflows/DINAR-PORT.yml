@@ -31,6 +31,8 @@ jobs:
             "Porting is started. Check logs: https://github.com/${{ github.repository
             }}/actions/runs/${{ github.run_id }}"
       - name: Checkout DINAR
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
         uses: actions/checkout@v2
         with:
           path: DINAR
@@ -53,6 +55,8 @@ jobs:
           # sets environment variables that available in next steps via $ {{ env.PORT_... }} notation
           python DINAR/workflow-files/analyze_port_trigger.py "$TITLE"
       - name: Checkout Repo
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
         uses: actions/checkout@v2
         with:
           path: REPO

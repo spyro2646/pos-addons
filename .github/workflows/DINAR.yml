@@ -57,10 +57,14 @@ jobs:
       - check-branch
     steps:
       - name: Checkout Repo
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
         uses: actions/checkout@v2
         with:
           path: REPO
       - name: Checkout DINAR
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
         uses: actions/checkout@v2
         with:
           path: DINAR

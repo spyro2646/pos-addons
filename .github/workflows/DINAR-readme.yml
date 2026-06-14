@@ -28,12 +28,16 @@ jobs:
       'itpp-labs/')"
     steps:
       - name: Checkout Repo
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
         uses: actions/checkout@v2
         with:
           path: REPO
           # token is required to bypass pushing without checks/reviews
           token: ${{ secrets.DINAR_TOKEN }}
       - name: Checkout DINAR
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
         uses: actions/checkout@v2
         with:
           path: DINAR

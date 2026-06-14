@@ -16,10 +16,9 @@ artifacts by using appropriate configurations (`if-no-files-found: ignore` and
 is unavailable (exit code 127). It must be updated to the v2 syntax: `docker compose`.
 Additionally, v2 strictly enforces lowercase project names (e.g., `-p dinar` instead of
 `-p DINAR`). Furthermore, to prevent Node 20 deprecation warnings from legacy actions
-like `checkout@v2`, the environment variable `FORCE_JAVASCRIPT_ACTIONS_TO_NODE20=true`
-must be set. Finally, `docker compose pull || true` and
-`docker compose up --no-start || true` are required when tolerating entirely missing
-remote images, as the standalone commands will otherwise exit non-zero. **Action:**
-Always use `docker compose` with lowercase project names in CI workflows. Set Node 24
-env vars for older actions, and append `|| true` to pull/up commands when expecting
-missing images.
+like `checkout@v2`, these actions must be upgraded to their modern counterparts like
+`v4`. Finally, `docker compose pull || true` and `docker compose up --no-start || true`
+are required when tolerating entirely missing remote images, as the standalone commands
+will otherwise exit non-zero. **Action:** Always use `docker compose` with lowercase
+project names in CI workflows. Upgrade older checkout actions, and append `|| true` to
+pull/up commands when expecting missing images.

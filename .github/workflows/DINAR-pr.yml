@@ -26,9 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -47,15 +45,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -110,15 +104,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -133,7 +123,7 @@ jobs:
       - name: Download Docker images with preinstalled modules
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config || true
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Analyze PR
         run: |
@@ -211,15 +201,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -265,7 +251,7 @@ jobs:
       - name: Download base images
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config || true
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'

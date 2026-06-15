@@ -66,7 +66,7 @@ jobs:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.7.x"
       - name: Prepare build folder

@@ -22,3 +22,16 @@ with `docker compose`, ensure project names are lowercase (e.g., `dinar` instead
 `DINAR`), and update hardcoded container names to the v2 hyphen format (`dinar-odoo-1`).
 Use `|| true` with commands like `pull` and `up --no-start` to tolerate missing images
 dynamically.
+
+## 2024-06-16 - Environment variables across jobs
+
+**Learning:** Environment variables defined in `$GITHUB_ENV` (like `ARTIFACT=empty`) do
+not persist across different jobs in a GitHub Actions workflow. Therefore, gating a
+download step in a downstream job using `if: env.ARTIFACT == 'yes'` when that variable
+was set in an upstream job will always evaluate to false. **Action:** When conditionally
+handling artifacts across jobs with `actions/download-artifact@v4`, do not gate the
+download step using job-level environment variables from an upstream job. Instead, run
+the download step with `continue-on-error: true` (so the pipeline proceeds even if the
+artifact is missing, avoiding hard failures) and evaluate the presence of the files
+dynamically in a subsequent bash step to reconstruct the necessary environment variable
+(e.g., checking if `modules.txt` exists) for downstream use.

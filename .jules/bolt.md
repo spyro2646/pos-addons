@@ -35,3 +35,28 @@ the download step with `continue-on-error: true` (so the pipeline proceeds even 
 artifact is missing, avoiding hard failures) and evaluate the presence of the files
 dynamically in a subsequent bash step to reconstruct the necessary environment variable
 (e.g., checking if `modules.txt` exists) for downstream use.
+
+## 2024-06-16 - GitHub Actions Artifact Conditional Upload
+
+**Learning:** `actions/upload-artifact@v4` handles empty or missing directories
+differently than v1. Setting `if-no-files-found: ignore` is sufficient to prevent the
+step from failing if no files are present. However, if the step is skipped entirely
+using an `if:` condition (e.g. `if: env.ARTIFACT == 'yes'`), downstream jobs that depend
+on `actions/download-artifact@v4` (even with `continue-on-error: true`) can encounter an
+'Artifact not found' hard error that causes the overall check to fail. **Action:** When
+migrating artifact actions to v4 where downstream jobs strictly rely on the artifact
+download step completing successfully (even if it downloads nothing), ensure the
+`upload-artifact` step always runs (e.g. `if: always()`) and rely on
+`if-no-files-found: ignore` to handle the empty state gracefully, rather than skipping
+the upload step entirely.
+
+## 2024-06-16 - Environment Variables
+
+**Learning:** In GitHub Actions workflows, environment variables set via `$GITHUB_ENV`
+in a job do not persist and are not available in subsequent jobs. This is problematic
+when a variable is used to gate steps dynamically (e.g., `if: env.ARTIFACT == 'yes'`).
+**Action:** When working with actions like `actions/download-artifact@v4` that span
+across different jobs, do not rely on `$GITHUB_ENV` variables passed from upstream jobs.
+Instead, always execute the download action using `continue-on-error: true`, and then
+manually check for the file's presence (e.g., via `test -f file.txt`) within the job's
+context to safely control downstream conditional logic.

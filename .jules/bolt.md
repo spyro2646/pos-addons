@@ -16,3 +16,20 @@ may be unavailable and result in a 'command not found' (exit code 127) error.
 **Action:** Always use the Docker Compose V2 plugin syntax (`docker compose`) instead.
 Update scripts appropriately, including tolerating missing remote images using
 `--pull missing || true` and updating hyphens in default container names.
+
+## 2026-06-18 - actions/download-artifact@v4 requires continue-on-error true
+
+**Learning:** `actions/download-artifact@v4` strictly fails if the specified artifact
+does not exist. In workflows where artifacts are conditionally uploaded (e.g.,
+`new-deps` in DINAR workflows), explicitly set `continue-on-error: true` at the step
+level (not inside the `with:` block) to prevent standard pipeline failures. **Action:**
+Always apply `continue-on-error: true` to `actions/download-artifact@v4` steps when
+downloading conditionally uploaded artifacts.
+
+## 2026-06-18 - Avoid Node.js deprecation warnings via Action upgrades
+
+**Learning:** To manage Node.js deprecation warnings in GitHub Actions workflows, the
+most reliable and cleanest solution is to bump the action to a modern version (e.g.,
+`actions/checkout@v4`). **Action:** Upgrade standard actions like `actions/checkout` and
+`actions/setup-python` to `v4` to avoid deprecation warnings and errors on modern runner
+environments.

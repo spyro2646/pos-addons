@@ -10,5 +10,9 @@ are missing, necessitating `continue-on-error: true` on the step level when arti
 are conditionally uploaded.
 
 ## 2026-06-18 - Upgrade docker-compose to docker compose v2
-**Learning:** In modern GitHub Actions runners, the standalone `docker-compose` command may be unavailable and result in a 'command not found' (exit code 127) error.
-**Action:** Always use the Docker Compose V2 plugin syntax (`docker compose`) instead. Update scripts appropriately, including tolerating missing remote images using `--pull missing || true` and updating hyphens in default container names.
+
+**Learning:** In modern GitHub Actions runners, the standalone `docker-compose` command
+may be unavailable and result in a 'command not found' (exit code 127) error.
+**Action:** Always use the Docker Compose V2 plugin syntax (`docker compose`) instead.
+Update scripts appropriately, including tolerating missing remote images using
+`--pull missing || true` and updating hyphens in default container names.

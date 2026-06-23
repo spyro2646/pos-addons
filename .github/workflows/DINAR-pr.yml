@@ -59,6 +59,8 @@ jobs:
           find DINAR -type f -exec sed -i 's/docker-compose -p DINAR/docker compose -p dinar/g' {} +
           find DINAR -type f -exec sed -i 's/docker-compose/docker compose/g' {} +
           find DINAR -type f -exec sed -i 's/docker compose-DINAR-pr.yml/docker-compose-DINAR-pr.yml/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' {} +
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -123,6 +125,8 @@ jobs:
           find DINAR -type f -exec sed -i 's/docker-compose -p DINAR/docker compose -p dinar/g' {} +
           find DINAR -type f -exec sed -i 's/docker-compose/docker compose/g' {} +
           find DINAR -type f -exec sed -i 's/docker compose-DINAR-pr.yml/docker-compose-DINAR-pr.yml/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' {} +
       - name: Configure docker
         run: |
           bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
@@ -133,14 +137,14 @@ jobs:
       - name: Download Docker images with preinstalled modules
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Analyze PR
         run: |
           # Get list of installed modules
           ODOO_BASE_MODULES=$(docker inspect \
           --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar-odoo-1)
+          dinar-odoo-1 || true)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
@@ -226,6 +230,8 @@ jobs:
           find DINAR -type f -exec sed -i 's/docker-compose -p DINAR/docker compose -p dinar/g' {} +
           find DINAR -type f -exec sed -i 's/docker-compose/docker compose/g' {} +
           find DINAR -type f -exec sed -i 's/docker compose-DINAR-pr.yml/docker-compose-DINAR-pr.yml/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' {} +
       - name: Install python tools
         run: |
           pip install plumbum pyyaml
@@ -267,8 +273,8 @@ jobs:
       - name: Download base images
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |

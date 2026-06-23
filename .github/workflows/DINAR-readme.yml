@@ -44,6 +44,8 @@ jobs:
           find DINAR -type f -exec sed -i 's/docker-compose -p DINAR/docker compose -p dinar/g' {} +
           find DINAR -type f -exec sed -i 's/docker-compose/docker compose/g' {} +
           find DINAR -type f -exec sed -i 's/docker compose-DINAR-pr.yml/docker-compose-DINAR-pr.yml/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' {} +
       - uses: actions/setup-python@v4
         with:
           python-version: "3.7.x"

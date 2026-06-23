@@ -31,11 +31,17 @@ jobs:
             "Porting is started. Check logs: https://github.com/${{ github.repository
             }}/actions/runs/${{ github.run_id }}"
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
+      - name: Create docker-compose wrapper
+        run: |
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose
+          echo 'if [[ "$*" == *"pull"* ]]; then docker compose "$@" || true; elif [[ "$*" == *"up --no-start"* ]]; then docker compose "$@" || true; else docker compose "$@"; fi' | sudo tee -a /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       - uses: actions/setup-python@v4
         with:
           python-version: "3.10"
@@ -53,12 +59,12 @@ jobs:
           # sets environment variables that available in next steps via $ {{ env.PORT_... }} notation
           python DINAR/workflow-files/analyze_port_trigger.py "$TITLE"
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
           fetch-depth: 0
           ref: ${{ env.PORT_TO_BRANCH }}
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}

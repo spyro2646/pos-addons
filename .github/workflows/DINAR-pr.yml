@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -34,7 +34,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -45,15 +45,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
+      - name: Create docker-compose wrapper
+        run: |
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose
+          echo 'if [[ "$*" == *"pull"* ]]; then docker compose "$@" || true; elif [[ "$*" == *"up --no-start"* ]]; then docker compose "$@" || true; else docker compose "$@"; fi' | sudo tee -a /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -83,7 +89,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}
@@ -104,15 +110,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
+      - name: Create docker-compose wrapper
+        run: |
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose
+          echo 'if [[ "$*" == *"pull"* ]]; then docker compose "$@" || true; elif [[ "$*" == *"up --no-start"* ]]; then docker compose "$@" || true; else docker compose "$@"; fi' | sudo tee -a /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       - name: Configure docker
         run: |
           bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
@@ -123,14 +135,14 @@ jobs:
       - name: Download Docker images with preinstalled modules
         run: |
           docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Analyze PR
         run: |
           # Get list of installed modules
           ODOO_BASE_MODULES=$(docker inspect \
           --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar_odoo_1)
+          dinar_odoo_1 || true)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
@@ -166,10 +178,12 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: new-deps
           path: new-deps/
+          if-no-files-found: ignore
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
         run: |
@@ -200,26 +214,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
+      - name: Create docker-compose wrapper
+        run: |
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose
+          echo 'if [[ "$*" == *"pull"* ]]; then docker compose "$@" || true; elif [[ "$*" == *"up --no-start"* ]]; then docker compose "$@" || true; else docker compose "$@"; fi' | sudo tee -a /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       - name: Install python tools
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: new-deps
           path: new-deps/
       - name: Check artifact
         run: |
-          if [ ! -f new-deps/modules.txt ]; then
+          if [ ! -d new-deps ] || [ -z "$(ls -A new-deps 2>/dev/null)" ] || [ ! -f new-deps/modules.txt ]; then
               echo "ARTIFACT=empty" >> $GITHUB_ENV
           fi
       - name: Configure Docker
@@ -229,7 +250,7 @@ jobs:
       - name: Analyze PR
         run: |
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
-          DEPS_MODULES=$(cat new-deps/modules.txt || true)
+          if [ -f new-deps/modules.txt ]; then DEPS_MODULES=$(cat new-deps/modules.txt); else DEPS_MODULES=""; fi
           cd REPO
           python ../DINAR/workflow-files/analyze-modules.py all "$DEPS_MODULES"
       - name: Install json parser
@@ -249,8 +270,8 @@ jobs:
       - name: Download base images
         run: |
           docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |

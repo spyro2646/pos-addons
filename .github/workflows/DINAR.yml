@@ -57,16 +57,22 @@ jobs:
       - check-branch
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - uses: actions/setup-python@v1
+      - name: Create docker-compose wrapper
+        run: |
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose
+          echo 'if [[ "$*" == *"pull"* ]]; then docker compose "$@" || true; elif [[ "$*" == *"up --no-start"* ]]; then docker compose "$@" || true; else docker compose "$@"; fi' | sudo tee -a /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.7.x"
       - name: Prepare build folder

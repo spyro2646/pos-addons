@@ -28,18 +28,23 @@ jobs:
       'itpp-labs/')"
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
           # token is required to bypass pushing without checks/reviews
           token: ${{ secrets.DINAR_TOKEN }}
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - uses: actions/setup-python@v1
+      - name: Patch DINAR scripts
+        run: |
+          find DINAR -type f -exec sed -i 's/docker-compose -p DINAR/docker compose -p dinar/g' {} +
+          find DINAR -type f -exec sed -i 's/docker-compose/docker compose/g' {} +
+          find DINAR -type f -exec sed -i 's/docker compose-DINAR-pr.yml/docker-compose-DINAR-pr.yml/g' {} +
+      - uses: actions/setup-python@v4
         with:
           python-version: "3.7.x"
       - name: Install python tools

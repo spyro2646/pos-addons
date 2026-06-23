@@ -54,13 +54,12 @@ jobs:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - name: Patch DINAR scripts
+      - name: Create docker-compose wrapper
         run: |
-          find DINAR -type f -exec sed -i 's/docker-compose -p DINAR/docker compose -p dinar/g' {} +
-          find DINAR -type f -exec sed -i 's/docker-compose/docker compose/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose-DINAR-pr.yml/docker-compose-DINAR-pr.yml/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' {} +
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose
+          echo 'if [[ "$*" == *"pull"* ]]; then docker compose "$@" || true; elif [[ "$*" == *"up --no-start"* ]]; then docker compose "$@" || true; else docker compose "$@"; fi' | sudo tee -a /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -120,13 +119,12 @@ jobs:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - name: Patch DINAR scripts
+      - name: Create docker-compose wrapper
         run: |
-          find DINAR -type f -exec sed -i 's/docker-compose -p DINAR/docker compose -p dinar/g' {} +
-          find DINAR -type f -exec sed -i 's/docker-compose/docker compose/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose-DINAR-pr.yml/docker-compose-DINAR-pr.yml/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' {} +
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose
+          echo 'if [[ "$*" == *"pull"* ]]; then docker compose "$@" || true; elif [[ "$*" == *"up --no-start"* ]]; then docker compose "$@" || true; else docker compose "$@"; fi' | sudo tee -a /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       - name: Configure docker
         run: |
           bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
@@ -136,15 +134,15 @@ jobs:
           pip install plumbum PyGithub pyyaml
       - name: Download Docker images with preinstalled modules
         run: |
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Analyze PR
         run: |
           # Get list of installed modules
           ODOO_BASE_MODULES=$(docker inspect \
           --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar-odoo-1 || true)
+          dinar_odoo_1 || true)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
@@ -159,8 +157,8 @@ jobs:
           # Install new dependencies without tests
           export MODULES="${{ env.PR_MODULES_DEPS }}"
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
       - name: Install Additional Dependencies (Packages)
         if: env.PR_DEPS != ''
         run: |
@@ -203,8 +201,8 @@ jobs:
           export MODULES="${{ env.PR_MODULES }}"
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
 
   tests-all:
     name: Integration Tests
@@ -225,13 +223,12 @@ jobs:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - name: Patch DINAR scripts
+      - name: Create docker-compose wrapper
         run: |
-          find DINAR -type f -exec sed -i 's/docker-compose -p DINAR/docker compose -p dinar/g' {} +
-          find DINAR -type f -exec sed -i 's/docker-compose/docker compose/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose-DINAR-pr.yml/docker-compose-DINAR-pr.yml/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose pull/docker compose pull --ignore-pull-failures || true/g' {} +
-          find DINAR -type f -exec sed -i 's/docker compose up --no-start/docker compose up --no-start --pull missing || true/g' {} +
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose
+          echo 'if [[ "$*" == *"pull"* ]]; then docker compose "$@" || true; elif [[ "$*" == *"up --no-start"* ]]; then docker compose "$@" || true; else docker compose "$@"; fi' | sudo tee -a /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       - name: Install python tools
         run: |
           pip install plumbum pyyaml
@@ -272,9 +269,9 @@ jobs:
           bash DINAR/workflow-files/how-to-run-locally.sh ${{ secrets.GITHUB_TOKEN }}
       - name: Download base images
         run: |
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |
@@ -284,5 +281,5 @@ jobs:
           export MODULES="${{ env.ALL_MODULES }}"
           export LOAD_MODULES="${{ env.ALL_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit

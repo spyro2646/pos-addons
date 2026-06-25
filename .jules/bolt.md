@@ -15,4 +15,10 @@ attempting to evaluate files.
 **Action:** Whenever optimizing GitHub workflows, bump major action versions
 (specifically cache and artifacts) to v4 for speed. However, actively audit artifact
 conditional logic to ensure graceful handling using `if-no-files-found` and robust
-directory existence checks.
+directory existence checks. In modern GitHub Actions runners, the standalone
+`docker-compose` command may be unavailable and result in a 'command not found' (exit
+code 127) error. Always use the Docker Compose V2 plugin syntax (`docker compose`)
+instead. When updating `docker-compose` commands to `docker compose` (v2 syntax) via
+automated find-and-replace, ensure that filenames referencing `docker-compose` (e.g.,
+`docker-compose-DINAR-pr.yml`) are excluded from the replacement (e.g., by matching
+`docker-compose ` with a trailing space) to avoid breaking file paths.

@@ -21,4 +21,8 @@ code 127) error. Always use the Docker Compose V2 plugin syntax (`docker compose
 instead. When updating `docker-compose` commands to `docker compose` (v2 syntax) via
 automated find-and-replace, ensure that filenames referencing `docker-compose` (e.g.,
 `docker-compose-DINAR-pr.yml`) are excluded from the replacement (e.g., by matching
-`docker-compose ` with a trailing space) to avoid breaking file paths.
+`docker-compose ` with a trailing space) to avoid breaking file paths. Docker Compose v2
+strictly enforces project name validation. Project names (e.g., used with the `-p` flag)
+must consist only of lowercase alphanumeric characters, hyphens, and underscores, and
+must start with a letter or number. Uppercase characters (e.g., `DINAR`) will result in
+an 'invalid project name' error and must be converted to lowercase.

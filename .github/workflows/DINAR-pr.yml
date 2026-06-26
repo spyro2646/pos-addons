@@ -222,6 +222,7 @@ jobs:
           path: new-deps/
       - name: Check artifact
         run: |
+          mkdir -p new-deps
           if [ ! -f new-deps/modules.txt ]; then
               echo "ARTIFACT=empty" >> $GITHUB_ENV
           fi

@@ -222,7 +222,7 @@ jobs:
           path: new-deps/
       - name: Check artifact
         run: |
-          if [ ! -d new-deps ] || [ -z "$(ls -A new-deps)" ] || [ ! -f new-deps/modules.txt ]; then
+          if [ ! -d new-deps ] || [ -z "$(ls -A new-deps 2>/dev/null)" ] || [ ! -f new-deps/modules.txt ]; then
               echo "ARTIFACT=empty" >> $GITHUB_ENV
           fi
       - name: Configure Docker

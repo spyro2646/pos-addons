@@ -1,5 +1,0 @@
-## 2024-05-24 - Upgrading CI dependencies and CLI usages
-
-**Learning:** GitHub Actions v1/v2/v3 usages such as `actions/checkout`, `actions/cache`, `actions/setup-python`, `actions/upload-artifact` and `actions/download-artifact` are deprecated, and could lead to slower or failing jobs on newer runners. Furthermore, Docker Compose v2 introduces `docker compose` which replaces `docker-compose`, and changes container naming rules (e.g. `dinar_odoo_1` -> `dinar-odoo-1`). Additionally, `actions/upload-artifact@v4` behavior dictates setting `if-no-files-found: ignore` and `include-hidden-files: true` when unconditionally preserving conditionally-created artifacts in workflows like DINAR-pr.yml. `docker compose pull` without the remote manifest requires `|| true` on `docker compose up --no-start` to avoid failures on unknown objects.
-
-**Action:** Upgraded all references to GitHub actions in `.github/workflows` to `@v4` implementations, and switched `docker-compose` legacy commands to Docker Compose V2 syntax. Adjusted naming conversions for the DINAR specific usages.

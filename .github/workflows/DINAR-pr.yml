@@ -123,13 +123,13 @@ jobs:
       - name: Download Docker images with preinstalled modules
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start || true
       - name: Analyze PR
         run: |
           # Get list of installed modules
           if docker inspect dinar-odoo-1 > /dev/null 2>&1; then
-            ODOO_BASE_MODULES=$(docker inspect --format '{{ index .Config.Labels "dinar.odoo.modules"}}' dinar-odoo-1)
+            ODOO_BASE_MODULES=$(docker inspect --format '{{ index .Config.Labels "dinar.odoo.modules"}}' dinar-odoo-1 || true)
           else
             ODOO_BASE_MODULES=""
           fi
@@ -225,7 +225,7 @@ jobs:
           path: new-deps/
       - name: Check artifact
         run: |
-          if [ ! -f new-deps/modules.txt ]; then
+          if [ ! -d new-deps ] || [ ! -f new-deps/modules.txt ] || [ ! -s new-deps/modules.txt ]; then
               echo "ARTIFACT=empty" >> $GITHUB_ENV
           fi
       - name: Configure Docker
@@ -235,7 +235,7 @@ jobs:
       - name: Analyze PR
         run: |
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
-          if [ -f new-deps/modules.txt ]; then
+          if [ -d new-deps ] && [ -f new-deps/modules.txt ] && [ -s new-deps/modules.txt ]; then
             DEPS_MODULES=$(cat new-deps/modules.txt)
           else
             DEPS_MODULES=""
@@ -259,8 +259,8 @@ jobs:
       - name: Download base images
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures || true
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start || true
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |

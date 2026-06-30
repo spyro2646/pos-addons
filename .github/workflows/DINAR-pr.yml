@@ -128,9 +128,11 @@ jobs:
       - name: Analyze PR
         run: |
           # Get list of installed modules
-          ODOO_BASE_MODULES=$(docker inspect \
-          --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar-odoo-1) || true
+          if docker inspect dinar-odoo-1 > /dev/null 2>&1; then
+            ODOO_BASE_MODULES=$(docker inspect --format '{{ index .Config.Labels "dinar.odoo.modules"}}' dinar-odoo-1)
+          else
+            ODOO_BASE_MODULES=""
+          fi
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
@@ -233,7 +235,11 @@ jobs:
       - name: Analyze PR
         run: |
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
-          DEPS_MODULES=$(cat new-deps/modules.txt || true)
+          if [ -f new-deps/modules.txt ]; then
+            DEPS_MODULES=$(cat new-deps/modules.txt)
+          else
+            DEPS_MODULES=""
+          fi
           cd REPO
           python ../DINAR/workflow-files/analyze-modules.py all "$DEPS_MODULES"
       - name: Install json parser

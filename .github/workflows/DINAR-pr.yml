@@ -167,11 +167,14 @@ jobs:
           bash DINAR/workflow-files/save-docker-layers.sh new-deps/
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
+      # ⚡ Bolt Optimization: Upgraded to actions/upload-artifact@v4 to prevent v1 deprecation pipeline failures and utilize a faster architecture.
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: new-deps
           path: new-deps/
+          if-no-files-found: ignore
+          include-hidden-files: true
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
         run: |
@@ -214,14 +217,16 @@ jobs:
       - name: Install python tools
         run: |
           pip install plumbum pyyaml
+      # ⚡ Bolt Optimization: Upgraded to actions/download-artifact@v4 to prevent v1 deprecation pipeline failures and utilize a faster architecture.
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: new-deps
           path: new-deps/
       - name: Check artifact
         run: |
-          if [ ! -f new-deps/modules.txt ]; then
+          if [ ! -d new-deps/ ] || [ ! -f new-deps/modules.txt ]; then
               echo "ARTIFACT=empty" >> $GITHUB_ENV
           fi
       - name: Configure Docker

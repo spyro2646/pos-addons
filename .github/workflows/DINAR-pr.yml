@@ -233,7 +233,7 @@ jobs:
       - name: Analyze PR
         run: |
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
-          DEPS_MODULES=$(cat new-deps/modules.txt || true)
+          if [ -f new-deps/modules.txt ]; then DEPS_MODULES=$(cat new-deps/modules.txt); else DEPS_MODULES=""; fi
           cd REPO
           python ../DINAR/workflow-files/analyze-modules.py all "$DEPS_MODULES"
       - name: Install json parser
@@ -260,6 +260,7 @@ jobs:
         run: |
           bash DINAR/workflow-files/load-docker-layers.sh new-deps/
       - name: Test all modules
+        if: env.ALL_MODULES != ''
         run: |
           export MODULES="${{ env.ALL_MODULES }}"
           export LOAD_MODULES="${{ env.ALL_MODULES_LOAD }}"

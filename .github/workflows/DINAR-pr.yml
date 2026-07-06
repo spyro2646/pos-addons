@@ -173,10 +173,12 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: new-deps
           path: new-deps/
+          if-no-files-found: ignore
+          include-hidden-files: true
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
         run: |
@@ -209,20 +211,21 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
-          # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 to remove Node 20 deprecation warnings and improve workflow reliability.
           path: REPO
       - name: Checkout DINAR
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 to remove Node 20 deprecation warnings and improve workflow reliability.
         uses: actions/checkout@v4
         with:
-          # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 to remove Node 20 deprecation warnings and improve workflow reliability.
           path: DINAR
           repository: itpp-labs/DINAR-fork
+          # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 to remove Node 20 deprecation warnings and improve workflow reliability.
           ref: master
       - name: Install python tools
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        continue-on-error: true
+        uses: actions/download-artifact@v4
         with:
           name: new-deps
           path: new-deps/

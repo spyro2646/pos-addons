@@ -31,7 +31,8 @@ jobs:
             "Porting is started. Check logs: https://github.com/${{ github.repository
             }}/actions/runs/${{ github.run_id }}"
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 to remove Node 20 deprecation warnings and improve workflow reliability.
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -53,7 +54,8 @@ jobs:
           # sets environment variables that available in next steps via $ {{ env.PORT_... }} notation
           python DINAR/workflow-files/analyze_port_trigger.py "$TITLE"
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 to remove Node 20 deprecation warnings and improve workflow reliability.
         with:
           path: REPO
           fetch-depth: 0

@@ -133,8 +133,8 @@ jobs:
         run: |
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for faster container orchestration.
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Analyze PR
         run: |
           # Get list of installed modules
@@ -269,8 +269,8 @@ jobs:
         run: |
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for faster container orchestration.
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |

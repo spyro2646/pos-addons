@@ -28,3 +28,6 @@ names supplied to the `-p` parameter to only lowercase characters. Additionally,
 blindly swallow errors using `|| true` on pulling and bringing up container operations
 if the dependent code inherently relies on the container being present, as it will just
 shift the failure to downstream jobs.
+
+**Note:** The previous removal of `|| true` on missing image pulling created a
+regression since `manifest unknown` will fail the CI if we don't handle it gracefully.

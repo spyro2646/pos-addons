@@ -8,3 +8,10 @@ failures due to legacy dependency restrictions in GitHub Action environments.
 versions (e.g. `v4`) and handle behavior changes such as `download-artifact@v4`
 strictness about missing files by pairing it with `continue-on-error: true` and adding
 custom bash directory checks.
+
+## 2025-02-24 - Upgrading deprecated GitHub actions/cache
+
+**Learning:** Node 20 deprecation will fail actions utilizing `actions/cache: v1`. We
+must update workflows to `actions/cache@v4` to prevent CI hard-failure and keep Node 20
+environments healthy. **Action:** When working on GitHub CI optimizations, also ensure
+`actions/cache` is modernized alongside `actions/checkout` and `actions/setup-python`.

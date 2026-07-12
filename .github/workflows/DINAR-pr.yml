@@ -36,7 +36,8 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      # ⚡ Bolt Optimization: Upgraded cache action to v4 to run on Node 20, improving execution speed and avoiding deprecation failures.
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -88,7 +89,8 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      # ⚡ Bolt Optimization: Upgraded cache action to v4 to run on Node 20, improving execution speed and avoiding deprecation failures.
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}

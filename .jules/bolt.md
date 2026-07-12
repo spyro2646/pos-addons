@@ -15,3 +15,16 @@ custom bash directory checks.
 must update workflows to `actions/cache@v4` to prevent CI hard-failure and keep Node 20
 environments healthy. **Action:** When working on GitHub CI optimizations, also ensure
 `actions/cache` is modernized alongside `actions/checkout` and `actions/setup-python`.
+
+## 2025-02-24 - Docker Compose V2 Project Naming
+
+**Learning:** Docker Compose V2 changes the default container naming convention, using
+hyphens instead of underscores and converting project names to lowercase. Using
+uppercase project names like `-p DINAR` will cause a failure:
+`invalid project name "DINAR": must consist only of lowercase alphanumeric characters...`.
+We must adapt hardcoded commands to lowercased values (e.g. `-p dinar`). **Action:**
+When migrating from `docker-compose` to `docker compose`, also ensure you adapt project
+names supplied to the `-p` parameter to only lowercase characters. Additionally, don't
+blindly swallow errors using `|| true` on pulling and bringing up container operations
+if the dependent code inherently relies on the container being present, as it will just
+shift the failure to downstream jobs.

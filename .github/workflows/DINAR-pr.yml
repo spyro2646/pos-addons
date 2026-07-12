@@ -132,9 +132,9 @@ jobs:
       - name: Download Docker images with preinstalled modules
         run: |
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for faster container orchestration.
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing
       - name: Analyze PR
         run: |
           # Get list of installed modules
@@ -156,8 +156,8 @@ jobs:
           export MODULES="${{ env.PR_MODULES_DEPS }}"
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for faster container orchestration.
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
       - name: Install Additional Dependencies (Packages)
         if: env.PR_DEPS != ''
         run: |
@@ -202,8 +202,8 @@ jobs:
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for faster container orchestration.
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
 
   tests-all:
     name: Integration Tests
@@ -268,9 +268,9 @@ jobs:
       - name: Download base images
         run: |
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for faster container orchestration.
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |
@@ -281,5 +281,5 @@ jobs:
           export LOAD_MODULES="${{ env.ALL_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for faster container orchestration.
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit

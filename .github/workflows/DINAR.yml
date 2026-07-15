@@ -57,16 +57,19 @@ jobs:
       - check-branch
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded to checkout@v4 for faster execution via Node 20
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded to checkout@v4 for faster execution via Node 20
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - uses: actions/setup-python@v1
+      - # ⚡ Bolt Optimization: Upgraded to setup-python@v4 for faster execution via Node 20
+        uses: actions/setup-python@v4
         with:
           python-version: "3.7.x"
       - name: Prepare build folder

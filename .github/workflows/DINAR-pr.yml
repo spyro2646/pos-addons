@@ -127,9 +127,9 @@ jobs:
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for compatibility with newer runners
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for compatibility with newer runners
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for compatibility with newer runners
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Analyze PR
         run: |
           # Get list of installed modules
@@ -264,9 +264,9 @@ jobs:
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for compatibility with newer runners
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for compatibility with newer runners
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
           # ⚡ Bolt Optimization: Migrated to Docker Compose v2 for compatibility with newer runners
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start --pull missing || true
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |

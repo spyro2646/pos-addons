@@ -119,8 +119,13 @@ jobs:
         run: |
           bash DINAR/workflow-files/configure-docker.sh ${{ secrets.DINAR_TOKEN || secrets.GITHUB_TOKEN }}
           echo "PR_FILES=../../REPO" >> $GITHUB_ENV
-      - name: Install python tools
+      - name:
+          Install python tools
+          # ⚡ Bolt Optimization: Inject legacy docker-compose interceptor wrapper for downstream dynamically fetched bash scripts
         run: |
+          echo '#!/bin/bash' | sudo tee /usr/local/bin/docker-compose > /dev/null
+          echo 'docker compose "$@"' | sudo tee -a /usr/local/bin/docker-compose > /dev/null
+          sudo chmod +x /usr/local/bin/docker-compose
           pip install plumbum PyGithub pyyaml
       - name: Download Docker images with preinstalled modules
         run: |
@@ -130,9 +135,7 @@ jobs:
       - name: Analyze PR
         run: |
           # Get list of installed modules
-          ODOO_BASE_MODULES=$(docker inspect \
-          --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar-odoo-1)
+          ODOO_BASE_MODULES=$(docker inspect --format '{{ index .Config.Labels "dinar.odoo.modules"}}' dinar-odoo-1)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation

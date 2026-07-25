@@ -58,7 +58,7 @@ jobs:
           path: REPO
           fetch-depth: 0
           ref: ${{ env.PORT_TO_BRANCH }}
-      # ⚡ Bolt Optimization: Upgraded to v4
+      -  # ⚡ Bolt Optimization: Upgraded to v4
       - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit

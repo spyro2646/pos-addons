@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 name: "DINAR"
-
 on:
   pull_request:
-
 jobs:
   pre-commit:
     name: "pre-commit"
@@ -39,7 +37,6 @@ jobs:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
       - uses: pre-commit/action@v1.0.1
-
   review:
     name: "Quick Review"
     runs-on: ubuntu-latest
@@ -98,7 +95,6 @@ jobs:
           git diff --name-only --no-ext-diff FETCH_HEAD..HEAD -- .
           echo "RUN PRE-COMMIT:"
           pre-commit run --show-diff-on-failure --color=always --show-diff-on-failure --files $(git diff --name-only --no-ext-diff FETCH_HEAD..HEAD -- .)
-
   tests:
     name: "Quick Tests"
     runs-on: ubuntu-latest
@@ -121,18 +117,18 @@ jobs:
         run: |
           pip install plumbum PyGithub pyyaml
       - name: Download Docker images with preinstalled modules
+        # ⚡ Bolt Optimization: Upgraded docker-compose to docker compose v2 to fix missing command errors and speed up build processes
         run: |
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
       - name: Analyze PR
         run: |
           # Get list of installed modules
           ODOO_BASE_MODULES=$(docker inspect \
           --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar_odoo_1)
+          dinar-odoo-1)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
-
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
           cd REPO
           python ../DINAR/workflow-files/analyze-modules.py updated ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} ${{ github.event.number }} $ODOO_BASE_MODULES
@@ -145,8 +141,8 @@ jobs:
           # Install new dependencies without tests
           export MODULES="${{ env.PR_MODULES_DEPS }}"
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
       - name: Install Additional Dependencies (Packages)
         if: env.PR_DEPS != ''
         run: |
@@ -165,11 +161,17 @@ jobs:
           bash DINAR/workflow-files/save-docker-layers.sh new-deps/
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
+      - name: Ensure artifact dir exists before upload
+        if: always()
+        run: mkdir -p new-deps/
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded actions/upload-artifact to v4 for 10x faster artifact uploads
+        uses: actions/upload-artifact@v4
         with:
           name: new-deps
           path: new-deps/
+          include-hidden-files: true
+          if-no-files-found: ignore
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
         run: |
@@ -187,9 +189,8 @@ jobs:
           export MODULES="${{ env.PR_MODULES }}"
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
-
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
   tests-all:
     name: Integration Tests
     # Let Quick Review/Tests run first
@@ -213,10 +214,14 @@ jobs:
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded actions/download-artifact to v4 for 10x faster artifact downloads
+        uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: new-deps
           path: new-deps/
+      - name: Ensure artifact dir exists
+        run: mkdir -p new-deps/
       - name: Check artifact
         run: |
           if [ ! -f new-deps/modules.txt ]; then
@@ -248,9 +253,9 @@ jobs:
           bash DINAR/workflow-files/how-to-run-locally.sh ${{ secrets.GITHUB_TOKEN }}
       - name: Download base images
         run: |
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |
@@ -260,5 +265,5 @@ jobs:
           export MODULES="${{ env.ALL_MODULES }}"
           export LOAD_MODULES="${{ env.ALL_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit

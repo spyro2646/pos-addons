@@ -58,8 +58,7 @@ jobs:
           path: REPO
           fetch-depth: 0
           ref: ${{ env.PORT_TO_BRANCH }}
-      # ⚡ Bolt Optimization: Upgraded actions/cache to v4 for faster caching via zstd compression
-      - uses: actions/cache@v4
+      - uses: actions/cache@v1
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}

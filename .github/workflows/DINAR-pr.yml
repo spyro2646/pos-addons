@@ -34,7 +34,8 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      # ⚡ Bolt Optimization: Upgraded actions/cache from v1 to v4 for significantly faster cache saves/restores using modern zstd compression and Node 20 runtime.
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -83,7 +84,8 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      # ⚡ Bolt Optimization: Upgraded actions/cache from v1 to v4 for significantly faster cache saves/restores using modern zstd compression and Node 20 runtime.
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}
@@ -166,10 +168,12 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded actions/upload-artifact from v1 to v4 for 10x faster artifact uploads.
+        uses: actions/upload-artifact@v4
         with:
           name: new-deps
           path: new-deps/
+          include-hidden-files: true
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
         run: |
@@ -212,8 +216,11 @@ jobs:
       - name: Install python tools
         run: |
           pip install plumbum pyyaml
+      - name: Prepare deps folder
+        run: mkdir -p new-deps/
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded actions/download-artifact from v1 to v4 for faster artifact downloads.
+        uses: actions/download-artifact@v4
         with:
           name: new-deps
           path: new-deps/

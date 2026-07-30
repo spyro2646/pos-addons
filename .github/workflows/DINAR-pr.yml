@@ -168,7 +168,8 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded to v4 to fix CI failure due to deprecated v1 action
+        uses: actions/upload-artifact@v4
         with:
           name: new-deps
           path: new-deps/
@@ -215,7 +216,8 @@ jobs:
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded to v4 to fix CI failure due to deprecated v1 action
+        uses: actions/download-artifact@v4
         with:
           name: new-deps
           path: new-deps/

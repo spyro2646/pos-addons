@@ -168,9 +168,11 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded actions/upload-artifact to v4 for faster upload speed
+        uses: actions/upload-artifact@v4
         with:
           name: new-deps
+          include-hidden-files: true
           path: new-deps/
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
@@ -215,7 +217,8 @@ jobs:
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded actions/download-artifact to v4 for faster download speed
+        uses: actions/download-artifact@v4
         with:
           name: new-deps
           path: new-deps/

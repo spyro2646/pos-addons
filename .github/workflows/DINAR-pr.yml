@@ -26,7 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout to v4 to use Node 20 runtime and fix deprecation warnings
+        uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -34,8 +35,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      # ⚡ Bolt Optimization: Upgraded actions/cache to v4 for faster zstd compression and Node 20 execution
-      - uses: actions/cache@v4
+      - uses: actions/cache@v1
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -46,11 +46,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout to v4 to use Node 20 runtime and fix deprecation warnings
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout to v4 to use Node 20 runtime and fix deprecation warnings
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -84,8 +86,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      # ⚡ Bolt Optimization: Upgraded actions/cache to v4 for faster zstd compression and Node 20 execution
-      - uses: actions/cache@v4
+      - uses: actions/cache@v1
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}
@@ -106,11 +107,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout to v4 to use Node 20 runtime and fix deprecation warnings
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout to v4 to use Node 20 runtime and fix deprecation warnings
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -168,11 +171,9 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        # ⚡ Bolt Optimization: Upgraded actions/upload-artifact to v4 for faster upload speed
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v1
         with:
           name: new-deps
-          include-hidden-files: true
           path: new-deps/
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
@@ -204,11 +205,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout to v4 to use Node 20 runtime and fix deprecation warnings
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout to v4 to use Node 20 runtime and fix deprecation warnings
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -217,8 +220,7 @@ jobs:
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        # ⚡ Bolt Optimization: Upgraded actions/download-artifact to v4 for faster download speed
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v1
         with:
           name: new-deps
           path: new-deps/

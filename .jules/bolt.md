@@ -6,3 +6,11 @@ configurations), upgrading core CI dependencies like `actions/cache` to modern v
 avoiding deprecated runtime overheads. **Action:** Identify and upgrade outdated GitHub
 Actions with appropriate inline comments explaining the performance benefits when
 operating in CI/CD-heavy codebases.
+
+## 2024-05-24 - CI Artifact Failure Fix
+
+**Learning:** The workflow was automatically failing because
+`actions/upload-artifact@v1` and `actions/download-artifact@v1` are explicitly
+deprecated and rejected by GitHub Actions runner infrastructure. **Action:** Upgrading
+both upload and download artifact actions to `v4` avoids the automatic block and
+provides performance improvements.

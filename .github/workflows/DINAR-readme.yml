@@ -28,13 +28,15 @@ jobs:
       'itpp-labs/')"
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded to v4 for faster node20 execution
+        uses: actions/checkout@v4
         with:
           path: REPO
           # token is required to bypass pushing without checks/reviews
           token: ${{ secrets.DINAR_TOKEN }}
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded to v4 for faster node20 execution
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork

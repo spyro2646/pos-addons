@@ -15,3 +15,11 @@ Migrating workflows to Docker Compose v2 requires replacing `docker-compose` wit
 (e.g., `dinar_odoo_1` to `dinar-odoo-1`). **Action:** Safely replaced `docker-compose`
 with `docker compose`, lowercase project names, and hyphenated container names to fix
 the CI.
+
+## 2024-05-23 - Docker Inspect Error
+
+**Learning:** When appending `--pull missing || true` to `docker compose up --no-start`
+commands to tolerate missing remote images, if the image pull fails, the container will
+not be created. Downstream commands expecting the container to exist (e.g.,
+`docker inspect`) must be conditionally gated or they will fail. **Action:**
+Conditionally gated `docker inspect` with an if-statement.

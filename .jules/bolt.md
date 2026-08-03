@@ -23,3 +23,15 @@ commands to tolerate missing remote images, if the image pull fails, the contain
 not be created. Downstream commands expecting the container to exist (e.g.,
 `docker inspect`) must be conditionally gated or they will fail. **Action:**
 Conditionally gated `docker inspect` with an if-statement.
+
+## 2024-05-23 - Artifact Upload/Download v4 Migration
+
+**Learning:** In `actions/upload-artifact@v4`, if the target directory exists but
+contains no files, the action will issue a warning ('No files were found with the
+provided path'). To suppress this warning, configure the action with
+`if-no-files-found: ignore` in the `with:` block. Furthermore, when using
+`continue-on-error: true` with `actions/download-artifact@v4` to bypass missing
+artifacts, the target directory will NOT be created unlike v1. Therefore, downstream
+scripts must conditionally check for the directory (e.g., `[ ! -d dir ] || ...`).
+**Action:** Add `if-no-files-found: ignore` to upload step, `continue-on-error: true` to
+download step, and updated downstream script to check for directory existence.

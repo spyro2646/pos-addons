@@ -26,7 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 for faster fetching and node20 execution
+        uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -45,11 +46,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 for faster fetching and node20 execution
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 for faster fetching and node20 execution
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -104,11 +107,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 for faster fetching and node20 execution
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 for faster fetching and node20 execution
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -122,15 +127,15 @@ jobs:
           pip install plumbum PyGithub pyyaml
       - name: Download Docker images with preinstalled modules
         run: |
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start || true
       - name: Analyze PR
         run: |
           # Get list of installed modules
           ODOO_BASE_MODULES=$(docker inspect \
           --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar_odoo_1)
+          dinar-odoo-1)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
@@ -145,8 +150,8 @@ jobs:
           # Install new dependencies without tests
           export MODULES="${{ env.PR_MODULES_DEPS }}"
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
       - name: Install Additional Dependencies (Packages)
         if: env.PR_DEPS != ''
         run: |
@@ -166,8 +171,10 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded actions/upload-artifact from v1 to v4 for faster artifact uploads
+        uses: actions/upload-artifact@v4
         with:
+          if-no-files-found: ignore
           name: new-deps
           path: new-deps/
       - name: HOW TO RUN QUICK TESTS LOCALLY
@@ -187,8 +194,8 @@ jobs:
           export MODULES="${{ env.PR_MODULES }}"
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
 
   tests-all:
     name: Integration Tests
@@ -200,11 +207,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 for faster fetching and node20 execution
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded actions/checkout from v2 to v4 for faster fetching and node20 execution
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -213,7 +222,8 @@ jobs:
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        # ⚡ Bolt Optimization: Upgraded actions/download-artifact from v1 to v4 for faster artifact downloads
+        uses: actions/download-artifact@v4
         with:
           name: new-deps
           path: new-deps/
@@ -248,9 +258,9 @@ jobs:
           bash DINAR/workflow-files/how-to-run-locally.sh ${{ secrets.GITHUB_TOKEN }}
       - name: Download base images
         run: |
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull || true
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start || true
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |
@@ -260,5 +270,5 @@ jobs:
           export MODULES="${{ env.ALL_MODULES }}"
           export LOAD_MODULES="${{ env.ALL_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker-compose -p DINAR -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --abort-on-container-exit

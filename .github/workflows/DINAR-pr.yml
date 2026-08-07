@@ -234,7 +234,7 @@ jobs:
       - name: Analyze PR
         run: |
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
-          DEPS_MODULES=$(cat new-deps/modules.txt || true)
+          DEPS_MODULES=$(cat new-deps/modules.txt 2>/dev/null || true)
           cd REPO
           python ../DINAR/workflow-files/analyze-modules.py all "$DEPS_MODULES"
       - name: Install json parser

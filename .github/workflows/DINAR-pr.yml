@@ -130,7 +130,7 @@ jobs:
           # Get list of installed modules
           ODOO_BASE_MODULES=$(docker inspect \
           --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar_odoo_1)
+          dinar-odoo-1)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation
@@ -165,6 +165,8 @@ jobs:
           bash DINAR/workflow-files/save-docker-layers.sh new-deps/
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
+      - name: Create artifact directory
+        run: mkdir -p new-deps/
       - name: Create artifact directory
         run: mkdir -p new-deps/
       - name: Save DINAR with dependencies
@@ -223,6 +225,7 @@ jobs:
           path: new-deps/
       - name: Check artifact
         run: |
+          mkdir -p new-deps/
           mkdir -p new-deps/
           if [ ! -f new-deps/modules.txt ]; then
               echo "ARTIFACT=empty" >> $GITHUB_ENV

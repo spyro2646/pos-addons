@@ -19,3 +19,11 @@ default (`dinar-odoo-1`). **Action:** When workflows fail with
 `docker-compose: command not found`, migrate the syntax to `docker compose`, ensure
 project names are lowercase alphanumeric/hyphens, and update container name string
 matches in downstream scripts to use hyphenation.
+
+## 2024-08-09 - docker compose pull fails strictly if image doesn't exist
+
+**Learning:** If a remote image doesn't exist yet, `docker compose pull` fails and
+causes the pipeline to crash with "manifest unknown" error. **Action:** When workflows
+conditionally build/push or optionally run images, append `--ignore-pull-failures` to
+the pull step to bypass the error and allow the workflow to continue instead of
+`|| true` which causes downstream commands to silently fail or behave unpredictably.

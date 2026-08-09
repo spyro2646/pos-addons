@@ -7,3 +7,15 @@ scenario. **Action:** When migrating `download-artifact` from v1 to v4 in workfl
 where the artifact might be absent, explicitly insert a `run: mkdir -p <dir>` step
 before the download action to ensure downstream checks for the directory don't fail
 unexpectedly.
+
+## 2024-08-09 - docker-compose command not found on ubuntu-24.04
+
+**Learning:** Newer GitHub Actions runner images (like `ubuntu-24.04`) have removed
+Docker Compose v1 (`docker-compose`), causing exit code 127. Migrating to Docker Compose
+v2 (`docker compose`) requires updating both the command and validating project names
+(e.g., `-p DINAR` becomes `-p dinar` to meet V2's strict validation rules). Downstream
+references to containers (like `dinar_odoo_1`) must also switch to the V2 hyphenated
+default (`dinar-odoo-1`). **Action:** When workflows fail with
+`docker-compose: command not found`, migrate the syntax to `docker compose`, ensure
+project names are lowercase alphanumeric/hyphens, and update container name string
+matches in downstream scripts to use hyphenation.

@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -34,7 +34,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -45,11 +45,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -83,7 +83,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}
@@ -104,11 +104,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -166,8 +166,9 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
+          if-no-files-found: ignore
           name: new-deps
           path: new-deps/
       - name: HOW TO RUN QUICK TESTS LOCALLY
@@ -200,11 +201,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -212,8 +213,11 @@ jobs:
       - name: Install python tools
         run: |
           pip install plumbum pyyaml
+      - name: Create Artifact Folder
+        run: mkdir -p new-deps/
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
           name: new-deps
           path: new-deps/

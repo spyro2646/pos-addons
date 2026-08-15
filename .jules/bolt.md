@@ -24,3 +24,14 @@ images by adding `--ignore-pull-failures` to pull commands.
 `project_service_1`) to hyphens (e.g., `project-service-1`). **Action:** Any downstream
 scripts or commands relying on explicit V1 container names must be updated to use the V2
 hyphenated syntax to avoid execution failures.
+
+## 2024-08-15 - Migrate docker-compose up behavior to v2
+
+**Learning:** `docker compose` (v2) attempts to pull missing images automatically during
+`up` commands, whereas `docker-compose` (v1) behavior was sometimes more lenient or
+handled pull failures differently. This causes `docker compose up --no-start` to fail
+with "manifest unknown" if the images do not exist remotely. **Action:** When migrating
+from Docker Compose v1 to v2, if a workflow safely bypasses missing images during `pull`
+with `--ignore-pull-failures`, you must also append `--no-pull` to subsequent
+`docker compose up` commands to prevent them from attempting to pull the missing images
+again and failing the workflow.

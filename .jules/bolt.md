@@ -8,3 +8,11 @@ directory when bypassing missing artifacts with `continue-on-error: true`. **Act
 Always verify directory existence and create necessary folders (e.g., `mkdir -p`) before
 using download-artifact v4 with `continue-on-error`, and use `if-no-files-found: ignore`
 to prevent upload warnings/failures.
+
+## 2024-08-15 - Migrate docker-compose to docker compose v2
+
+**Learning:** `docker-compose` (v1) is missing on newer Ubuntu CI runners (like
+ubuntu-24.04), causing "exit code 127" failures. **Action:** Migrate workflows to Docker
+Compose v2 by replacing `docker-compose` with `docker compose`. Ensure project names are
+validated (e.g., `-p dinar` instead of `-p DINAR`), and safely handle missing remote
+images by adding `--ignore-pull-failures` to pull commands.

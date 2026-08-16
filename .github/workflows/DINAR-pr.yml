@@ -124,7 +124,7 @@ jobs:
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-pull --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --pull never --no-start
       - name: Analyze PR
         run: |
           # Get list of installed modules
@@ -146,7 +146,7 @@ jobs:
           export MODULES="${{ env.PR_MODULES_DEPS }}"
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-pull --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --pull never --abort-on-container-exit
       - name: Install Additional Dependencies (Packages)
         if: env.PR_DEPS != ''
         run: |
@@ -188,7 +188,7 @@ jobs:
           export LOAD_MODULES="${{ env.PR_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-pull --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --pull never --abort-on-container-exit
 
   tests-all:
     name: Integration Tests
@@ -250,7 +250,7 @@ jobs:
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-pull --no-start
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --pull never --no-start
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'
         run: |
@@ -261,4 +261,4 @@ jobs:
           export LOAD_MODULES="${{ env.ALL_MODULES_LOAD }}"
           export ODOO_EXTRA_ARG=--test-enable
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-pull --abort-on-container-exit
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --pull never --abort-on-container-exit

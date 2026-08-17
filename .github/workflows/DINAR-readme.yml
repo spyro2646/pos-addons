@@ -28,18 +28,18 @@ jobs:
       'itpp-labs/')"
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           path: REPO
           # token is required to bypass pushing without checks/reviews
           token: ${{ secrets.DINAR_TOKEN }}
       - name: Checkout DINAR
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v1
         with:
           python-version: "3.7.x"
       - name: Install python tools

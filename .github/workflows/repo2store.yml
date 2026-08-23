@@ -11,7 +11,8 @@ jobs:
       'itpp-labs/')"
     steps:
       - name: Checkout REPO
-        uses: actions/checkout@v2-beta
+        # ⚡ Bolt Optimization: Upgrade GitHub Action to v4 for Node 20 compatibility and faster execution
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           # custom token is not needed for fetching REPO,

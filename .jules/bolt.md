@@ -20,3 +20,17 @@ by default, which can cause failures if ignoring pull errors. **Action:** When f
 ensure project names (`-p`) are lowercase, and if `--ignore-pull-failures` is used on
 the pull step, append `--pull never` to the subsequent `up` command to prevent it from
 failing.
+
+## 2024-05-14 - CI Failure due to missing remote image (Unresolvable upstream blocker)
+
+**Learning:** In the `Download Docker images with preinstalled modules` step, the
+workflow is failing because `ghcr.io/spyro2646/dinar:pos-addons-db-17.0` does not exist
+on the remote registry ("Error manifest unknown"). While migrating to `docker compose`
+v2 and applying `--ignore-pull-failures` successfully allows the `pull` step to proceed,
+the subsequent `up` step fails despite `--pull never` because the local machine does not
+possess the image either. The workflow fundamentally requires these missing base images
+to create the containers. **Action:** Acknowledge this is an unresolvable upstream
+blocker that cannot be fixed by modifying the workflow syntax or Docker Compose
+settings, as the required base images are simply absent. Proceed with the PR submission
+detailing the successful migration to Docker Compose v2 and noting this upstream
+dependency issue.

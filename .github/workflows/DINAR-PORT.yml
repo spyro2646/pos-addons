@@ -31,12 +31,14 @@ jobs:
             "Porting is started. Check logs: https://github.com/${{ github.repository
             }}/actions/runs/${{ github.run_id }}"
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded to modern v4 action for Node 20 execution speed
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
           ref: master
-      - uses: actions/setup-python@v4
+      # ⚡ Bolt Optimization: Upgraded to modern v5 action for Node 20 execution speed
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
       - name: Install python tools
@@ -53,12 +55,14 @@ jobs:
           # sets environment variables that available in next steps via $ {{ env.PORT_... }} notation
           python DINAR/workflow-files/analyze_port_trigger.py "$TITLE"
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded to modern v4 action for Node 20 execution speed
+        uses: actions/checkout@v4
         with:
           path: REPO
           fetch-depth: 0
           ref: ${{ env.PORT_TO_BRANCH }}
-      - uses: actions/cache@v1
+      # ⚡ Bolt Optimization: Upgraded to modern v4 action for Node 20 execution speed
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}

@@ -175,12 +175,12 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        if: env.ARTIFACT == 'yes'
         # ⚡ Bolt Optimization: Upgraded to modern v4 action for Node 20 execution speed
         uses: actions/upload-artifact@v4
         with:
           name: new-deps
           path: new-deps/
+          if-no-files-found: ignore
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
         run: |

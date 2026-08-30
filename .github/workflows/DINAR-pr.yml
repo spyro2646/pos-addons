@@ -35,7 +35,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v4
+      - uses: actions/cache@v1
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -86,7 +86,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v4
+      - uses: actions/cache@v1
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}
@@ -138,7 +138,7 @@ jobs:
           # Get list of installed modules
           ODOO_BASE_MODULES=$(docker inspect \
           --format '{{ index .Config.Labels "dinar.odoo.modules"}}' \
-          dinar_odoo_1)
+          dinar-odoo-1)
           echo "ODOO_BASE_MODULES=$ODOO_BASE_MODULES"
 
           # sets environment variables that available in next steps via $ {{ env.PR_... }} notation

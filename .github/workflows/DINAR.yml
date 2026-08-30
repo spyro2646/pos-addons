@@ -57,11 +57,13 @@ jobs:
       - check-branch
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded to v4 to leverage faster Node 20 architecture and improve performance
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # ⚡ Bolt Optimization: Upgraded to v4 to leverage faster Node 20 architecture and improve performance
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork

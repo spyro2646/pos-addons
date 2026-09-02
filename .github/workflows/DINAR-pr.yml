@@ -26,7 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # Optimization: Upgrading to v4 leverages the faster Node 20 architecture.
+        uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
@@ -45,11 +46,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # Optimization: Upgrading to v4 leverages the faster Node 20 architecture.
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # Optimization: Upgrading to v4 leverages the faster Node 20 architecture.
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -104,11 +107,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # Optimization: Upgrading to v4 leverages the faster Node 20 architecture.
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # Optimization: Upgrading to v4 leverages the faster Node 20 architecture.
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork
@@ -200,11 +205,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        # Optimization: Upgrading to v4 leverages the faster Node 20 architecture.
+        uses: actions/checkout@v4
         with:
           path: REPO
       - name: Checkout DINAR
-        uses: actions/checkout@v2
+        # Optimization: Upgrading to v4 leverages the faster Node 20 architecture.
+        uses: actions/checkout@v4
         with:
           path: DINAR
           repository: itpp-labs/DINAR-fork

@@ -34,7 +34,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v4
+      - uses: actions/cache@v1
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
@@ -83,7 +83,7 @@ jobs:
         run:
           echo "PY=$(python --version --version | sha256sum | cut -d' ' -f1)" >>
           $GITHUB_ENV
-      - uses: actions/cache@v4
+      - uses: actions/cache@v1
         with:
           path: ~/.cache/pre-commit
           key: pre-commit|${{ env.PY }}|${{ hashFiles('REPO/.pre-commit-config.yaml') }}
@@ -123,7 +123,7 @@ jobs:
       - name: Download Docker images with preinstalled modules
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
       - name: Analyze PR
         run: |
@@ -166,11 +166,10 @@ jobs:
           echo "${{ env.PR_MODULES_DEPS }}" > new-deps/modules.txt
           echo "ARTIFACT=yes" >> $GITHUB_ENV
       - name: Save DINAR with dependencies
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v1
         with:
           name: new-deps
           path: new-deps/
-          if-no-files-found: ignore
       - name: HOW TO RUN QUICK TESTS LOCALLY
         if: always()
         run: |
@@ -214,11 +213,10 @@ jobs:
         run: |
           pip install plumbum pyyaml
       - name: Download Additional Dependencies artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v1
         with:
           name: new-deps
           path: new-deps/
-        continue-on-error: true
       - name: Check artifact
         run: |
           if [ ! -f new-deps/modules.txt ]; then
@@ -251,7 +249,7 @@ jobs:
       - name: Download base images
         run: |
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml config
-          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull --ignore-pull-failures
+          docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml pull
           docker compose -p dinar -f DINAR/workflow-files/docker-compose-DINAR-pr.yml up --no-start
       - name: Apply new-deps artifact
         if: env.ARTIFACT != 'empty'

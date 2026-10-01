@@ -97,7 +97,7 @@ jobs:
           echo "CHANGED FILES:"
           git diff --name-only --no-ext-diff FETCH_HEAD..HEAD -- .
           echo "RUN PRE-COMMIT:"
-          pre-commit run --show-diff-on-failure --color=always --show-diff-on-failure --files $(git diff --name-only --no-ext-diff FETCH_HEAD..HEAD -- .)
+          git diff --name-only --no-ext-diff FETCH_HEAD..HEAD -- . | xargs -r pre-commit run --show-diff-on-failure --color=always --show-diff-on-failure --files
 
   tests:
     name: "Quick Tests"
